@@ -12,6 +12,9 @@
   transition: opacity 0.2s;
 }
 
+.phone::-webkit-scrollbar {
+  display: none;
+}
 .slider:hover {
   opacity: 1;
   cursor: pointer;
