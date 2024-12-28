@@ -25,6 +25,7 @@
     >
       <div
         class="phone border border-5 border-black bg-white rounded-5 shadow-lg overflow-y-scroll"
+        onclick="displayLockScreen()"
         style="height: 600px; width: 300px"
       >
         <!-- Top Black Section-->
@@ -70,9 +71,23 @@
             <div class="d-flex flex-column align-items-center p-2 rounded">
               <i
                 class="bi bi-person-lines-fill text-danger fs-1 bg-white px-2 rounded"
-              ></i>
+                onClick="displayContactListScreen()"
+              >
+              </i>
               <span class="text-white">Contact</span>
             </div>
+          </div>
+        </main>
+
+        <!-- Contact List Screen -->
+        <main id="contactListScreen" class="screen">
+          <div class="p-3 text-light shadow">
+            <h1 class="fw=bolder">Contacts</h1>
+          </div>
+
+          <!-- Search Form -->
+          <div class="p-2 position-relative">
+            <input type="text" id="search" class="" />
           </div>
         </main>
       </div>
