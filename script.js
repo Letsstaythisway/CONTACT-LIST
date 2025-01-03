@@ -1,4 +1,4 @@
-const apiEP = "https://randomuser.me/api?results=2";
+const apiEP = "https://randomuser.me/api?results=6";
 
 let userList = [];
 
@@ -25,21 +25,16 @@ const disAppScreen = () => {
   document.querySelector(".appScreen").style.display = "block";
 };
 
-const fetchUsers = async (url) => {
-  //fetch the user from the API
-  //promise method
-  // fetch(url)
-  //   .then((response) => {
-  //     console.log(response);
-  //     return response.json();
-  //   })
-  //   .then((data) => {
-  //     console.log(data);
-  //   })
-  //   .catch((error) => {
-  //     console.log(erro);
-  //   });
+const disContactScreen = () => {
+  //Hide App Screen
+  document.querySelector(".appScreen").remove();
+  // Show ContactList Screen
+  document.querySelector(".contactListScreen").style.display = "block";
 
+  fetchUsers(apiEP);
+};
+
+const fetchUsers = async (url) => {
   //async and await method
   const response = await fetch(url);
   const data = await response.json();
@@ -52,37 +47,39 @@ const fetchUsers = async (url) => {
   displayContactlist(userList);
 };
 
-fetchUsers(apiEP);
-
 //display Contact List
 const displayContactlist = (userList) => {
-  console.log(userList);
   document.getElementById("list").style.display = "block";
 
-  const str = ` <div class="accordion-item">
+  let str = "";
+
+  userList.map((item, i) => {
+    str += ` <div class="accordion-item">
                   <h2 class="accordion-header">
                     <button
                       class="accordion-button collapsed"
                       type="button"
                       data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree"
+                      data-bs-target="#collapse${i}"
                       aria-expanded="false"
-                      aria-controls="collapseThree"
+                      aria-controls="collapse${i}"
                     >
                       <img
-                        src="https://randomuser.me/api/portraits/thumb/men/75.jpg"
+                        src="${item.picture.large}"
                         alt=""
                         width="50px"
                         class="rounded-circle"
                       />
                       <div class="ms-2">
-                        <div class="fw-bolder">Subodh Ranabhat</div>
-                        <small>4-6 Caroline Street</small>
+                        <div class="fw-bolder">${item.name.title} ${item.name.first}
+                        ${item.name.last}</div>
+                        <small>${item.location.street.number}
+                        ${item.location.street.name}</small>
                       </div>
                     </button>
                   </h2>
                   <div
-                    id="collapseThree"
+                    id="collapse${i}"
                     class="accordion-collapse collapse"
                     data-bs-parent="#accordionExample"
                   >
@@ -90,7 +87,7 @@ const displayContactlist = (userList) => {
                       class="accordion-body d-flex flex-column align-items-center"
                     >
                       <img
-                        src="https://randomuser.me/api/portraits/thumb/men/75.jpg"
+                        src="${item.picture.large}"
                         alt=""
                         width="150px"
                         class="rounded-circle"
@@ -98,35 +95,54 @@ const displayContactlist = (userList) => {
                       <div>
                         <div class="fw-bolder">
                           <i class="bi bi-person"></i>
-                          Subodh Ranabaht
+                          ${item.name.title} ${item.name.first}
+                          ${item.name.last}
                         </div>
                         <div>
-                          <a href="tel:123456789">
+                          <a href="tel:${item.cell}">
                             <i class="bi bi-phone"></i>
-                            123456789
+                           ${item.cell}
                           </a>
                         </div>
                         <div>
-                          <a href="mailto:xyz@gmail.com">
+                          <a href="mailto:${item.email}">
                             <i class="bi bi-envelope"></i>
-                            xyz@gmail.com
+                          ${item.email}
                           </a>
                         </div>
                         <div>
                           <a
-                            href="https://www.google.com/maps?sca_esv=ad651d970e92dbeb&output=search&q=westmead&source=lnms&fbs=AEQNm0Aa4sjWe7Rqy32pFwRj0UkW1DRbm01j6DCVS0r1sTxn7h_rt6mVhwDmwtd3hPZjM8xOYJM4hmmrxWbUY3sD5VWIFJq8NvoVn81Lmtlm71HJeBII-M4srnbDxQrLSK8JTNSHCUv4bGtiZ9U-tyXiC-L7zb8wEV2PO73O2FcTNucem0T5OL48EWMWuFuOLRLfKJHk6Iwbt54smbWdBBZoxD4W2GVDmw&entry=mc&ved=1t:200715&ictx=111"
+                            href="https://www.google.com/maps/${item.location.street.number}+
+                            ${item.location.street.name}+ ${item.location.city} + 
+                            ${item.location.state} + ${item.location.country}"
                             target="_blank"
                           >
                             <i class="bi bi-geo-alt"></i>
-                            Westmead 2145
+                            ${item.location.street.number}
+                            ${item.location.street.name}
+                            ${item.location.state}
                           </a>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>`;
-
-  userList.map((item, i));
+  });
 
   document.getElementById("userAccordion").innerHTML = str;
+
+  document.getElementById("userCount").innerText = userList.length;
 };
+
+//search contact
+document.getElementById("search").addEventListener("keyup", (e) => {
+  const { value } = e.target;
+
+  const filteredUsers = userList.filter((item) => {
+    const name = (item.name.first + " " + item.name.last).toLowerCase();
+
+    return name.includes(value.toLowerCase());
+  });
+
+  displayContactlist(filteredUsers);
+});
