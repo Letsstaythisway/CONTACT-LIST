@@ -1,3 +1,8 @@
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .wrapper,
 .phone {
   background: url(./yoyo.jpg) no-repeat center;
